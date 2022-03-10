@@ -1,0 +1,27 @@
+---
+- name: Ensure Python 3
+  become: yes
+  raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
+  register: result
+  changed_when: "result.rc != 0"
+
+- name: Gather facts
+  setup:
+
+- name: "Ensure pip installed"
+  become: yes
+  apt:
+    name:
+      - python-distutils-extra
+      - python3-pip
+    state: latest
+
+- name: Ensure upgraded pip and ansible pip requirements
+  become: yes
+  pip:
+    name:
+      - pip
+      - jsondiff
+      - pymysql
+    state: latest
+    extra_args: --upgrade

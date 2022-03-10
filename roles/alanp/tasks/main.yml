@@ -1,0 +1,21 @@
+---
+- name: alanp.me - remember compose definition
+  set_fact:
+    alanp_definition:
+      version: '3.8'
+      services:
+        website:
+          image: ghcr.io/oofsauce/website:latest
+          restart: unless-stopped
+          ports:
+            - "8080:9090"
+          environment:
+            - "DEV=true"
+- name: alanp.me - start compose
+  docker_compose:
+    project_name: alanp
+    recreate: always
+    restarted: yes
+    remove_orphans: yes
+    state: present
+    definition: '{{alanp_definition}}'

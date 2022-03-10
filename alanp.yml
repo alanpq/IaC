@@ -2,4 +2,9 @@
 - hosts: alanp
   remote_user: root
   roles:
-    - nginx
+    - role: docker
+      tags: [base]
+    - role: nginx
+      tags: [proxy]
+    - role: alanp
+      tags: [web]

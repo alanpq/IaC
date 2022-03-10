@@ -1,2 +1,2 @@
-ssh.alanp.me
-127.0.0.1
+alanp ansible_host=ssh.alanp.me ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_vps
+ein ansible_host=ein.alanp.me ansible_user=alan ansible_ssh_private_key_file=~/.ssh/id_ein

@@ -1,0 +1,26 @@
+- name: ensure nginx version
+  apt: name=nginx state=latest
+  become: yes
+- name: copy nginx config
+  copy:
+    src: ../cfg/
+    dest: /etc/nginx/
+    owner: root
+  become: yes
+
+- name: check the current symlink
+  stat: path=/etc/nginx/sites-enabled 
+  register: sites_enabled 
+  become: yes
+- name: remove the folder (only if it is a folder)
+  file: path=/etc/nginx/sites-enabled state=absent
+  when: sites_enabled.stat.isdir is defined and sites_enabled.stat.isdir
+  become: yes
+- name: create symlink
+  file:
+    src: /etc/nginx/sites-available
+    dest: /etc/nginx/sites-enabled
+    state: link
+    force: yes
+  become: yes
+  notify: restart nginx

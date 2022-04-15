@@ -5,12 +5,18 @@
       version: '3.8'
       services:
         website:
-          image: ghcr.io/oofsauce/website:latest
+          image: alanp:latest
           restart: unless-stopped
           ports:
-            - "8080:9090"
+            - "8081:9090"
           environment:
             - "DEV=true"
+        whoami:
+          image: traefik/whoami
+          labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.whoami.rule=Host(`alanp.me`)"
+
 - name: alanp.me - start compose
   docker_compose:
     project_name: alanp

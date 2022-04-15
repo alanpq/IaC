@@ -1,10 +1,18 @@
 ---
 - hosts: alanp
   remote_user: root
+
+  vars_files:
+    - 'vars/secrets_mapping.yml'
+    - 'vars/secrets.yml'
+
   roles:
     - role: docker
-      tags: [base]
-    - role: nginx
-      tags: [proxy]
+      tags: [init]
+    - role: traefik
+      tags: [proxy, provision]
+
+    - role: drone
+      tags: [drone, provision]
     - role: alanp
-      tags: [web]
+      tags: [web, provision]

@@ -1,0 +1,28 @@
+---
+- name: traefik - remember compose definition
+  set_fact:
+    traefik_definition:
+      version: '3'
+      services:
+        reverse-proxy:
+          image: traefik 
+          command:
+            #- "--log.level=DEBUG"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
+          ports:
+            - "80:80"
+            - "7070:8080"
+          volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+- name: traefik - start compose
+  docker_compose:
+    project_name: traefik
+    recreate: always
+    restarted: yes
+    remove_orphans: yes
+    state: present
+    definition: '{{traefik_definition}}'

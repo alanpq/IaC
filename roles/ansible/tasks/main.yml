@@ -23,5 +23,6 @@
       - pip
       - jsondiff
       - pymysql
+      - bcrypt
     state: latest
     extra_args: --upgrade

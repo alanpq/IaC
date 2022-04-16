@@ -3,20 +3,23 @@
   set_fact:
     alanp_definition:
       version: '3.8'
+      networks:
+        traefik:
+          external: true
       services:
         website:
           image: alanp:latest
+          networks:
+            - traefik
           restart: unless-stopped
-          ports:
-            - "8081:9090"
           environment:
             - "DEV=true"
-        whoami:
-          image: traefik/whoami
           labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.whoami.rule=Host(`alanp.me`)"
-
+            traefik.enable: true
+            traefik.docker.network: traefik
+            traefik.http.routers.alanp.rule: 'Host(`alanp.me`)'
+            traefik.http.services.alanp.loadbalancer.server.port: '9090'
+            traefik.http.routers.alanp.service: 'alanp'
 - name: alanp.me - start compose
   docker_compose:
     project_name: alanp

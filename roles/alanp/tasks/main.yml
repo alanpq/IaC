@@ -8,7 +8,7 @@
           external: true
       services:
         website:
-          image: alanp:latest
+          image: ghcr.io/oofsauce/website:latest
           networks:
             - traefik
           restart: unless-stopped
@@ -24,6 +24,7 @@
   docker_compose:
     project_name: alanp
     recreate: always
+    pull: yes
     build: yes
     restarted: yes
     remove_orphans: yes

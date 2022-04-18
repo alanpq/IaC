@@ -24,6 +24,7 @@
   docker_compose:
     project_name: alanp
     recreate: always
+    build: yes
     restarted: yes
     remove_orphans: yes
     state: present

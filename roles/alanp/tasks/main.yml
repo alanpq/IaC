@@ -8,7 +8,7 @@
           external: true
       services:
         website:
-          image: ghcr.io/oofsauce/website:latest
+          image: ghcr.io/alanpq/website:latest
           networks:
             - traefik
           restart: unless-stopped

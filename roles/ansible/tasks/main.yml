@@ -12,7 +12,7 @@
   become: yes
   apt:
     name:
-      - python-distutils-extra
+      - python3-distutils-extra
       - python3-pip
     state: latest
 
@@ -23,6 +23,6 @@
       - pip
       - jsondiff
       - pymysql
-      - bcrypt
+      - "passlib[bcrypt]"
     state: latest
     extra_args: --upgrade

@@ -2,7 +2,7 @@ keys:
   - &users:
     - &alan 111D6C0637278F94E3438D9B6B2B471B33BC4E0B
   - &hosts:
-    - &ein age149y8wcpghrd8zp3tq3ddtu5cjrhqxr8m4sk2fcalclzefmlj59kqt4puzt
+    - &ein age12xt6v08uejxkd9gegdrmq68cqzjukk860x7sss4k80h6dyw52fvqc72z6k
 
 creation_rules:
   - path_regex: hosts/ein/secrets.ya?ml$

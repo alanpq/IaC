@@ -32,7 +32,7 @@
     enable = true;
     apiTokenFile = config.sops.secrets.cloudflare-api-token.path;
     domains = [
-      "ein"
+      "ein.alanp.me"
     ];
     proxied = true;
   };

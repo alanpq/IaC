@@ -28,6 +28,13 @@
     supportedFilesystems = ["ntfs" "vfat" "ext4" "lvm" "xfs"];
   };
 
+  services.jellyfin = {
+    enable = true;
+  };
+  services.caddy.virtualHosts."jellyfin.alanp.me".extraConfig = ''
+    reverse_proxy http://127.0.0.1:8096
+  '';
+
   services.cloudflare-dyndns = {
     enable = true;
     apiTokenFile = config.sops.secrets.cloudflare-api-token.path;

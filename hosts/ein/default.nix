@@ -64,7 +64,6 @@
     pkgs.neovim
     pkgs.curl
     pkgs.gitMinimal
-    pkgs.nss.tools # needed for caddy self signed certs?
   ];
 
   system.stateVersion = "25.05";

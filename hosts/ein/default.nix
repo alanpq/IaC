@@ -29,6 +29,7 @@
     loader.efi.canTouchEfiVariables = true;
     supportedFilesystems = ["ntfs" "vfat" "ext4" "lvm" "xfs"];
   };
+  sops.defaultSopsFile = ./secrets.yaml;
 
   services.cloudflare-dyndns = {
     enable = true;
@@ -38,10 +39,7 @@
     ];
     proxied = true;
   };
-
-  sops.secrets.cloudflare-api-token = {
-    sopsFile = ./secrets.yaml;
-  };
+  sops.secrets.cloudflare-api-token = {};
 
   services.openssh = {
     enable = true;

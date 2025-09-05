@@ -8,9 +8,6 @@
     globalConfig = ''
       local_certs
     '';
-    virtualHosts."ein.alanp.me".extraConfig = ''
-      respond "hello from ein"
-    '';
     virtualHosts."localhost".extraConfig = ''
       respond "OK"
     '';

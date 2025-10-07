@@ -6,6 +6,7 @@
   domain = "immich.alanp.me";
 in {
   services.immich = {
+    package = pkgs.unstable.immich;
     enable = true;
     port = 2283;
     openFirewall = false;

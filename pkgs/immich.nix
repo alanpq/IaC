@@ -33,7 +33,7 @@
   buildPackages,
 }: let
   pnpm = pnpm_10;
-  version = "1.144.1";
+  version = "2.2.3";
 
   esbuild' = buildPackages.esbuild.override {
     buildGoModule = args:
@@ -54,7 +54,7 @@
 
   buildLock = {
     sources =
-      builtins.map
+      map
       (p: {
         name = p.pname;
         inherit (p) version;
@@ -78,7 +78,7 @@
   in
     runCommand "immich-geodata"
     {
-      outputHash = "sha256-XoP5h82qhuCkxeBaZ2U/t9DU+o/ECu4hAfNB4lCtfHg=";
+      outputHash = "sha256-zZHAomW1C4qReFbhme5dkVnTiLw+jmhZhzuYvoBVBCY=";
       outputHashMode = "recursive";
       nativeBuildInputs = [
         cacert
@@ -105,14 +105,14 @@
     owner = "immich-app";
     repo = "immich";
     tag = "v${version}";
-    hash = "sha256-lSe50nbVWNWej137JgfJawIOPhtMVoolHahfrd1ENJc=";
+    hash = "sha256-OoToTRDPXWOa7d1j1xvkZt+vKWBX4eHDiIsFs3bIlvw=";
   };
 
   pnpmDeps = pnpm.fetchDeps {
     pname = "immich";
     inherit version src;
     fetcherVersion = 2;
-    hash = "sha256-+CwwTqjI+xOGCAb66lZplNMBwR2xJZBs6E0OyGHbSAE=";
+    hash = "sha256-igkO0ID0/9uPtFAXL2v5bcFbCpZK2lcYEctWBKtFKdU=";
   };
 
   web = stdenv.mkDerivation {
@@ -143,6 +143,12 @@
       runHook postInstall
     '';
   };
+
+  # Without this thumbnail generation for raw photos fails with
+  #     Error: Input file has corrupt header: tiff2vips: samples_per_pixel not a whole number of bytes
+  vips' = vips.overrideAttrs (prev: {
+    mesonFlags = prev.mesonFlags ++ ["-Dtiff=disabled"];
+  });
 in
   stdenv.mkDerivation {
     pname = "immich";
@@ -179,7 +185,7 @@ in
       pango
       pixman
       # Required for sharp
-      vips
+      vips'
     ];
 
     env.SHARP_FORCE_GLOBAL_LIBVIPS = 1;
@@ -221,9 +227,9 @@ in
 
       echo '${builtins.toJSON buildLock}' > "$packageOut/build/build-lock.json"
 
-      makeWrapper '${lib.getExe nodejs}' "$out/bin/admin-cli" \
+      makeWrapper '${lib.getExe nodejs}' "$out/bin/immich-admin" \
         --add-flags "$packageOut/dist/main" \
-        --add-flags cli
+        --add-flags immich-admin
       makeWrapper '${lib.getExe nodejs}' "$out/bin/server" \
         --add-flags "$packageOut/dist/main" \
         --chdir "$packageOut" \
@@ -242,7 +248,7 @@ in
 
     passthru = {
       tests = {
-        inherit (nixosTests) immich immich-vectorchord-migration;
+        inherit (nixosTests) immich immich-vectorchord-migration immich-vectorchord-reindex;
       };
 
       machine-learning = immich-machine-learning;

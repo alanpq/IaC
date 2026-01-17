@@ -9,8 +9,6 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
-    inputs.alanp-web.nixosModules.default
-    inputs.heardle.nixosModules.default
     ./disk-config.nix
     ./hardware-configuration.nix
   ];
@@ -47,7 +45,7 @@
   };
 
   services.heardle = {
-    enable = true;
+    enable = false;
     listenHost = "127.0.1.2";
     databaseUrl = "postgres://heardle/heardle?host=/run/postgresql/";
     port = 8081;
@@ -81,6 +79,9 @@
     '';
     virtualHosts."heardle.alanp.me".extraConfig = ''
       reverse_proxy http://${config.services.heardle.listenHost}:${toString config.services.heardle.port}
+    '';
+    virtualHosts."buzz.alanp.me".extraConfig = ''
+      reverse_proxy http://127.0.0.1:1111
     '';
   };
   networking.firewall.allowedTCPPorts = [80 443];

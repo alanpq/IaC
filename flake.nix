@@ -5,7 +5,7 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     sops-nix = {
@@ -34,6 +34,8 @@
     nixpkgs-unstable,
     disko,
     sops-nix,
+    alanp-web,
+    heardle,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -44,17 +46,29 @@
       (final: prev:
         import ./pkgs {pkgs = final;}
         // {
-          perlPackages = prev.perlPackages.overrideScope (_: perlPrev: {
-            ImageExifTool = perlPrev.ImageExifTool.overrideAttrs (old: rec {
-              version = "13.38";
-              src = prev.fetchurl {
-                #url = "https://sourceforge.net/projects/exiftool/files/Image-ExifTool-${version}.tar.gz/download";
-                url = "https://exiftool.org/Image-ExifTool-${version}.tar.gz";
-                hash = "sha256-AlZnKrUHZi/kLRroUa4bVZMKPI62np1og8M1WekPXwE=";
-                # https://sourceforge.net/projects/exiftool/files/Image-ExifTool-13.38.tar.gz/download
-              };
-            });
-          });
+          # opencv = prev.opencv.overrideAttrs (old: let
+          #   contribSrc = prev.fetchFromGitHub {
+          #     owner = "opencv";
+          #     repo = "opencv_contrib";
+          #     tag = old.version;
+          #     hash = "sha256-3tbscRFryjCynIqh0OWec8CUjXTeIDxOGJkHTK2aIao=";
+          #   };
+          # in {
+          #   postUnpack = ''
+          #     cp --no-preserve=mode -r "${contribSrc}/modules" "$NIX_BUILD_TOP/source/opencv_contrib"
+          #   '';
+          # });
+          # perlPackages = prev.perlPackages.overrideScope (_: perlPrev: {
+          #   ImageExifTool = perlPrev.ImageExifTool.overrideAttrs (old: rec {
+          #     version = "13.38";
+          #     src = prev.fetchurl {
+          #       #url = "https://sourceforge.net/projects/exiftool/files/Image-ExifTool-${version}.tar.gz/download";
+          #       url = "https://exiftool.org/Image-ExifTool-${version}.tar.gz";
+          #       hash = "sha256-AlZnKrUHZi/kLRroUa4bVZMKPI62np1og8M1WekPXwE=";
+          #       # https://sourceforge.net/projects/exiftool/files/Image-ExifTool-13.38.tar.gz/download
+          #     };
+          #   });
+          # });
         })
     ];
     pkgsFor = lib.genAttrs systems (system:
@@ -90,6 +104,9 @@
         modules = [
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
+
+          alanp-web.nixosModules.default
+          heardle.nixosModules.default
           {nixpkgs.overlays = overlays;}
           ./hosts/zephyr
         ];

@@ -23,6 +23,7 @@
       warn-dirty = false;
     };
   };
+  documentation.nixos.enable = false;
   # sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
   boot = {
     loader.systemd-boot.enable = true;

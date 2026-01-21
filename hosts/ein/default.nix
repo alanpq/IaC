@@ -32,6 +32,30 @@
   };
   sops.defaultSopsFile = ./secrets.yaml;
 
+  services = {
+    prowlarr = {
+      enable = true;
+    };
+    radarr = {
+      enable = true;
+      group = "media";
+    };
+    sonarr = {
+      enable = true;
+      group = "media";
+    };
+    jackett = {
+      enable = true;
+      group = "media";
+    };
+    qbittorrent = {
+      enable = true;
+      webuiPort = 9111;
+      group = "media";
+    };
+  };
+  users.groups.media = {};
+
   services.cloudflare-dyndns = {
     enable = true;
     apiTokenFile = config.sops.secrets.cloudflare-api-token.path;

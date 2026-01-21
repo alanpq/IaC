@@ -35,18 +35,22 @@
   services = {
     prowlarr = {
       enable = true;
+      settings.server.port = 9696;
     };
     radarr = {
       enable = true;
       group = "media";
+      settings.server.port = 7878;
     };
     sonarr = {
       enable = true;
       group = "media";
+      settings.server.port = 8989;
     };
     jackett = {
       enable = true;
       group = "media";
+      port = 9117;
     };
     qbittorrent = {
       enable = true;

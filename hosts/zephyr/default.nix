@@ -2,7 +2,6 @@
   modulesPath,
   lib,
   pkgs,
-  inputs,
   config,
   ...
 }: {
@@ -11,6 +10,9 @@
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk-config.nix
     ./hardware-configuration.nix
+
+    ../../modules/immich.nix
+    ../../modules/vaultwarden.nix
   ];
   nix = {
     package = lib.mkDefault pkgs.nix;
@@ -26,6 +28,20 @@
     efiInstallAsRemovable = true;
   };
   services.openssh.enable = true;
+  sops.defaultSopsFile = ./secrets.yaml;
+
+  services.fail2ban = {
+    enable = true;
+    maxretry = 3;
+    ignoreIP = [
+      "10.0.0.0/8"
+      "172.16.0.0/12"
+      "192.168.0.0/16"
+    ];
+    jails = {
+      # (nixos module provides default jail for ssh)
+    };
+  };
 
   environment.systemPackages = map lib.lowPrio [
     pkgs.curl
@@ -44,36 +60,36 @@
     port = 8080;
   };
 
-  services.heardle = {
-    enable = false;
-    listenHost = "127.0.1.2";
-    databaseUrl = "postgres://heardle/heardle?host=/run/postgresql/";
-    port = 8081;
-  };
-
-  services.postgresql.enable = true;
-  services.postgresql.ensureDatabases = ["heardle"];
-  services.postgresql.ensureUsers = [
-    {
-      name = "heardle";
-      ensureDBOwnership = true;
-    }
-  ];
-  services.postgresql.identMap = lib.mkForce ''
-    heardle-users heardle heardle
-    heardle-users root heardle
-  '';
-
-  services.postgresql.authentication = ''
-    local heardle all peer map=heardle-users
-  '';
+  # services.heardle = {
+  #   enable = false;
+  #   listenHost = "127.0.1.2";
+  #   databaseUrl = "postgres://heardle/heardle?host=/run/postgresql/";
+  #   port = 8081;
+  # };
+  #
+  # services.postgresql.enable = false;
+  # services.postgresql.ensureDatabases = ["postgres" "heardle"];
+  # services.postgresql.ensureUsers = [
+  #   {
+  #     name = "heardle";
+  #     ensureDBOwnership = true;
+  #   }
+  # ];
+  # services.postgresql.identMap = lib.mkForce ''
+  #   heardle-users heardle heardle
+  #   heardle-users root heardle
+  # '';
+  #
+  # services.postgresql.authentication = ''
+  #   local heardle all peer map=heardle-users
+  # '';
 
   services.caddy = {
     enable = true;
     # cloudflare covers us ssl-wise, we just need self signed certs
-    globalConfig = ''
-      local_certs
-    '';
+    # globalConfig = ''
+    #   local_certs
+    # '';
     virtualHosts."alanp.me".extraConfig = ''
       reverse_proxy http://${config.services.alanp-web.listenHost}:${toString config.services.alanp-web.port}
     '';
@@ -84,7 +100,11 @@
       reverse_proxy http://127.0.0.1:1111
     '';
   };
-  networking.firewall.allowedTCPPorts = [80 443];
+
+  networking = {
+    hostName = "zephyr";
+    firewall.allowedTCPPorts = [80 443 22];
+  };
 
   system.stateVersion = "24.05";
 }

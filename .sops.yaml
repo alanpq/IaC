@@ -3,12 +3,19 @@ keys:
     - &alan 111D6C0637278F94E3438D9B6B2B471B33BC4E0B
   - &hosts:
     - &ein age12xt6v08uejxkd9gegdrmq68cqzjukk860x7sss4k80h6dyw52fvqc72z6k
+    - &zephyr age177jdljw50uvekl6gmva4rcc4a29uzrgn775ldfetfzfe7p4qzuss9hv33u
 
 creation_rules:
   - path_regex: hosts/ein/secrets.ya?ml$
     key_groups:
       - age:
           - *ein
+        pgp:
+          - *alan
+  - path_regex: hosts/zephyr/secrets.ya?ml$
+    key_groups:
+      - age:
+          - *zephyr
         pgp:
           - *alan
   - path_regex: hosts/common/secrets.ya?ml$

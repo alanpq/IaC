@@ -13,7 +13,6 @@
     ./hardware-configuration.nix
     ../../modules/caddy.nix
     ../../modules/jellyfin.nix
-    ../../modules/immich.nix
   ];
 
   nix = {

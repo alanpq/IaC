@@ -76,6 +76,15 @@
         inherit system overlays;
         config.allowUnfree = true;
       });
+    unstableOverlay = {config, ...}: {
+      nixpkgs.overlays = overlays;
+      nixpkgs.config.packageOverrides = pkgs: {
+        unstable = import nixpkgs-unstable {
+          inherit (config.nixpkgs) config;
+          inherit system overlays;
+        };
+      };
+    };
     system = "x86_64-linux";
   in {
     packages = forEachSystem (pkgs: import ./pkgs {inherit pkgs;});
@@ -87,15 +96,7 @@
         modules = [
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
-          ({config, ...}: {
-            nixpkgs.overlays = overlays;
-            nixpkgs.config.packageOverrides = pkgs: {
-              unstable = import nixpkgs-unstable {
-                inherit (config.nixpkgs) config;
-                inherit system overlays;
-              };
-            };
-          })
+          unstableOverlay
           ./hosts/ein
         ];
       };
@@ -104,6 +105,8 @@
         modules = [
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
+
+          unstableOverlay
 
           alanp-web.nixosModules.default
           heardle.nixosModules.default

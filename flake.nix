@@ -26,6 +26,10 @@
       url = "git+ssh://git@github.com/alanpq/heardle/";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    panoptes = {
+      url = "git+ssh://git@github.com/alanpq/panoptes/";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -93,6 +97,9 @@
     nixosConfigurations = {
       ein = nixpkgs.lib.nixosSystem {
         inherit system;
+        specialArgs = {
+          inherit inputs system;
+        };
         modules = [
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
@@ -102,6 +109,9 @@
       };
       zephyr = nixpkgs.lib.nixosSystem {
         inherit system;
+        specialArgs = {
+          inherit inputs system;
+        };
         modules = [
           sops-nix.nixosModules.sops
           disko.nixosModules.disko

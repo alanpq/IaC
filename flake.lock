@@ -289,11 +289,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1782912297,
-        "narHash": "sha256-UmskC5wQ65JroPMNhO9+W/qGv8jd9VL7wWuEaDS5vXk=",
+        "lastModified": 1784291312,
+        "narHash": "sha256-ZZ/ClHabm8vAkbCBsdZyplMWuGkPWDH6ssxmrGO3J14=",
         "ref": "refs/heads/main",
-        "rev": "2820cb3944042e2d329fa318017044bb27158a51",
-        "revCount": 47,
+        "rev": "da796c99c5163aed8dc410c990c2b5773da469e7",
+        "revCount": 83,
         "type": "git",
         "url": "ssh://git@github.com/alanpq/panoptes/"
       },

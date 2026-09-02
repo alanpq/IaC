@@ -116,7 +116,19 @@
     # globalConfig = ''
     #   local_certs
     # '';
+      # https://alanp.me/projects/positivity-practice  
     virtualHosts."alanp.me".extraConfig = ''
+
+      handle_path /projects/positivity-practice/* {
+        basic_auth {
+          db $2a$14$FrLG8.q4juuxF5ChdDAzQuQ.YUtwEaPnB8GC.XvSV8gQFyXefxdby 
+        }
+        root ${inputs.rena-stage.packages.${system}.default.override {
+            baseUrl = "/projects/positivity-practice/";
+        }}
+        file_server 
+      }
+
       reverse_proxy http://${config.services.alanp-web.listenHost}:${toString config.services.alanp-web.port}
     '';
     virtualHosts."panoptes.alanp.me".extraConfig = ''

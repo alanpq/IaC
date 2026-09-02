@@ -302,6 +302,29 @@
         "url": "ssh://git@github.com/alanpq/panoptes/"
       }
     },
+    "rena-stage": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788364871,
+        "lfs": true,
+        "narHash": "sha256-KVpz0QtYXlj16Djy967wiSgrobhICqQqQ7kY+moLtOI=",
+        "ref": "refs/heads/main",
+        "rev": "e15dbc3deffc71dfd36a693337d905221e167264",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@gitlab.com/alanpq/rena-stage"
+      },
+      "original": {
+        "lfs": true,
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@gitlab.com/alanpq/rena-stage"
+      }
+    },
     "root": {
       "inputs": {
         "alanp-web": "alanp-web",
@@ -310,6 +333,7 @@
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "panoptes": "panoptes",
+        "rena-stage": "rena-stage",
         "sops-nix": "sops-nix"
       }
     },

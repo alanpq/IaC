@@ -22,6 +22,10 @@
       url = "github:alanpq/website";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    rena-stage = {
+      url = "git+ssh://git@gitlab.com/alanpq/rena-stage?lfs=1&shallow=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     heardle = {
       url = "git+ssh://git@github.com/alanpq/heardle/";
       inputs.nixpkgs.follows = "nixpkgs";

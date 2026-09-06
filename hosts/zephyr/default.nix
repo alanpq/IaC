@@ -43,6 +43,43 @@
   services.openssh.enable = true;
   sops.defaultSopsFile = ./secrets.yaml;
 
+
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "server";
+  };
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+  };
+    networking.nftables = {
+    enable = true;
+
+    tables."game-server-nat" = {
+      family = "ip";
+
+      content = ''
+        chain postrouting {
+          type nat hook postrouting priority srcnat; policy accept;
+
+          oifname "tailscale0" ip daddr 100.86.131.46 udp dport 7135 masquerade
+        }
+      '';
+    };
+  };
+networking.nat = {
+      enable = true;
+
+    externalInterface = "enp1s0";
+    # internalInterfaces = [ "tailscale0" ];
+      forwardPorts = [
+        {
+          sourcePort = 7135;
+          destination = "100.86.131.46:7135";
+          proto = "udp";
+        }
+      ];
+    };
+
   services.fail2ban = {
     enable = true;
     maxretry = 3;

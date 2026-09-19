@@ -16,6 +16,7 @@
     ../../modules/immich.nix
     ../../modules/vaultwarden.nix
     ../../modules/fail2ban.nix
+    ../../modules/grafana.nix
   ];
   nix = {
     package = lib.mkDefault pkgs.nix;
@@ -54,52 +55,31 @@
   networking.nftables = {
     enable = true;
 
-    tables."game-server-nat" = {
-      family = "ip";
-
-      content = ''
-        chain postrouting {
-          type nat hook postrouting priority srcnat; policy accept;
-
-          oifname "tailscale0" ip daddr 100.86.131.46 udp dport 7135 masquerade
-        }
-      '';
-    };
+    # tables."game-server-nat" = {
+    #   family = "ip";
+    #
+    #   content = ''
+    #     chain postrouting {
+    #       type nat hook postrouting priority srcnat; policy accept;
+    #
+    #       oifname "tailscale0" ip daddr 100.86.131.46 udp dport 7135 masquerade
+    #     }
+    #   '';
+    # };
   };
-  networking.nat = {
-    enable = true;
-
-    externalInterface = "enp1s0";
-    # internalInterfaces = [ "tailscale0" ];
-    forwardPorts = [
-      {
-        sourcePort = 7135;
-        destination = "100.86.131.46:7135";
-        proto = "udp";
-      }
-    ];
-  };
-
-  services.grafana = {
-    enable = true;
-    settings = {
-      server = {
-        http_addr = "127.0.0.1";
-        http_port = 3000;
-        enforce_domain = true;
-        enable_gzip = true;
-        domain = "grafana.your.domain";
-
-        # Alternatively, if you want to serve Grafana from a subpath:
-        # domain = "your.domain";
-        # root_url = "https://your.domain/grafana/";
-        # serve_from_sub_path = true;
-      };
-
-      # Prevents Grafana from phoning home
-      #analytics.reporting_enabled = false;
-    };
-  };
+  # networking.nat = {
+  #   enable = true;
+  #
+  #   externalInterface = "enp1s0";
+  #   # internalInterfaces = [ "tailscale0" ];
+  #   forwardPorts = [
+  #     {
+  #       sourcePort = 7135;
+  #       destination = "100.86.131.46:7135";
+  #       proto = "udp";
+  #     }
+  #   ];
+  # };
 
   environment.systemPackages = map lib.lowPrio [
     pkgs.curl
@@ -160,6 +140,7 @@
     # cloudflare covers us ssl-wise, we just need self signed certs
     # globalConfig = ''
     #   local_certs
+    #   skip_install_trust
     # '';
     # https://alanp.me/projects/positivity-practice
     virtualHosts."alanp.me".extraConfig = ''

@@ -43,7 +43,6 @@
   services.openssh.enable = true;
   sops.defaultSopsFile = ./secrets.yaml;
 
-
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "server";
@@ -51,7 +50,7 @@
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
   };
-    networking.nftables = {
+  networking.nftables = {
     enable = true;
 
     tables."game-server-nat" = {
@@ -66,19 +65,19 @@
       '';
     };
   };
-networking.nat = {
-      enable = true;
+  networking.nat = {
+    enable = true;
 
     externalInterface = "enp1s0";
     # internalInterfaces = [ "tailscale0" ];
-      forwardPorts = [
-        {
-          sourcePort = 7135;
-          destination = "100.86.131.46:7135";
-          proto = "udp";
-        }
-      ];
-    };
+    forwardPorts = [
+      {
+        sourcePort = 7135;
+        destination = "100.86.131.46:7135";
+        proto = "udp";
+      }
+    ];
+  };
 
   services.fail2ban = {
     enable = true;
@@ -90,6 +89,27 @@ networking.nat = {
     ];
     jails = {
       # (nixos module provides default jail for ssh)
+    };
+  };
+
+  services.grafana = {
+    enable = true;
+    settings = {
+      server = {
+        http_addr = "127.0.0.1";
+        http_port = 3000;
+        enforce_domain = true;
+        enable_gzip = true;
+        domain = "grafana.your.domain";
+
+        # Alternatively, if you want to serve Grafana from a subpath:
+        # domain = "your.domain";
+        # root_url = "https://your.domain/grafana/";
+        # serve_from_sub_path = true;
+      };
+
+      # Prevents Grafana from phoning home
+      #analytics.reporting_enabled = false;
     };
   };
 
@@ -153,17 +173,17 @@ networking.nat = {
     # globalConfig = ''
     #   local_certs
     # '';
-      # https://alanp.me/projects/positivity-practice  
+    # https://alanp.me/projects/positivity-practice
     virtualHosts."alanp.me".extraConfig = ''
 
       handle_path /projects/positivity-practice/* {
         basic_auth {
-          db $2a$14$FrLG8.q4juuxF5ChdDAzQuQ.YUtwEaPnB8GC.XvSV8gQFyXefxdby 
+          db $2a$14$FrLG8.q4juuxF5ChdDAzQuQ.YUtwEaPnB8GC.XvSV8gQFyXefxdby
         }
         root ${inputs.rena-stage.packages.${system}.default.override {
-            baseUrl = "/projects/positivity-practice/";
-        }}
-        file_server 
+        baseUrl = "/projects/positivity-practice/";
+      }}
+        file_server
       }
 
       reverse_proxy http://${config.services.alanp-web.listenHost}:${toString config.services.alanp-web.port}

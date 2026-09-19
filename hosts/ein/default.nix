@@ -51,6 +51,10 @@
       group = "media";
       port = 9117;
     };
+    flaresolverr = {
+      enable = true;
+      port = 8191;
+    };
     qbittorrent = {
       enable = true;
       webuiPort = 9111;

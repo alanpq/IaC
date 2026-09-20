@@ -32,6 +32,16 @@
             url = "http://${config.services.prometheus.listenAddress}:${toString config.services.prometheus.port}";
             isDefault = true;
           }
+          {
+            name = "Tempo";
+            type = "tempo";
+            url = "http://127.0.0.1:3200";
+          }
+          {
+            name = "Loki";
+            type = "loki";
+            url = "http://127.0.0.1:3100";
+          }
         ];
       };
     };
@@ -56,6 +66,58 @@
 
       configPath = "/etc/alloy/config.alloy";
     };
+
+    tempo = {
+      enable = true;
+      settings = {
+        server = {
+          http_listen_port = 3200;
+          grpc_listen_port = 9096;
+        };
+        # Alloy forwards traces here over OTLP/gRPC.
+        distributor.receivers.otlp.protocols.grpc.endpoint = "127.0.0.1:4319";
+        ingester.max_block_duration = "5m";
+        compactor.compaction.block_retention = "48h";
+        storage.trace = {
+          backend = "local";
+          wal.path = "/var/lib/tempo/wal";
+          local.path = "/var/lib/tempo/blocks";
+        };
+      };
+    };
+
+    loki = {
+      enable = true;
+      configuration = {
+        auth_enabled = false;
+        server = {
+          http_listen_port = 3100;
+          grpc_listen_port = 9095;
+        };
+        common = {
+          instance_addr = "127.0.0.1";
+          path_prefix = "/var/lib/loki";
+          storage.filesystem = {
+            chunks_directory = "/var/lib/loki/chunks";
+            rules_directory = "/var/lib/loki/rules";
+          };
+          replication_factor = 1;
+          ring.kvstore.store = "inmemory";
+        };
+        schema_config.configs = [
+          {
+            from = "2024-01-01";
+            store = "tsdb";
+            object_store = "filesystem";
+            schema = "v13";
+            index = {
+              prefix = "index_";
+              period = "24h";
+            };
+          }
+        ];
+      };
+    };
   };
 
   sops.secrets.grafana-admin-password = {
@@ -75,12 +137,16 @@
 
       output {
         metrics = [otelcol.processor.batch.default.input]
+        traces  = [otelcol.processor.batch.default.input]
+        logs    = [otelcol.processor.batch.default.input]
       }
     }
 
     otelcol.processor.batch "default" {
       output {
         metrics = [otelcol.exporter.prometheus.default.input]
+        traces  = [otelcol.exporter.otlp.tempo.input]
+        logs    = [otelcol.exporter.loki.default.input]
       }
     }
 
@@ -91,6 +157,25 @@
     prometheus.remote_write "default" {
       endpoint {
         url = "http://${config.services.prometheus.listenAddress}:${toString config.services.prometheus.port}/api/v1/write"
+      }
+    }
+
+    otelcol.exporter.otlp "tempo" {
+      client {
+        endpoint = "127.0.0.1:4319"
+        tls {
+          insecure = true
+        }
+      }
+    }
+
+    otelcol.exporter.loki "default" {
+      forward_to = [loki.write.default.receiver]
+    }
+
+    loki.write "default" {
+      endpoint {
+        url = "http://127.0.0.1:3100/loki/api/v1/push"
       }
     }
   '';

@@ -32,7 +32,7 @@
     };
     panoptes = {
       url = "git+ssh://git@github.com/alanpq/panoptes/";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -44,6 +44,7 @@
     sops-nix,
     alanp-web,
     heardle,
+    panoptes,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -124,6 +125,7 @@
 
           alanp-web.nixosModules.default
           heardle.nixosModules.default
+          panoptes.nixosModules.default
           {nixpkgs.overlays = overlays;}
           ./hosts/zephyr
         ];

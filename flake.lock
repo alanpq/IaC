@@ -247,6 +247,22 @@
     },
     "nixpkgs_4": {
       "locked": {
+        "lastModified": 1781454065,
+        "narHash": "sha256-d2xfDjnfRuf/xYGdu9VVRHiav/2w5hDL/5cw2TuVAXw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9eac87a12312b8f60dd52e1c6e1a265f6fc7f5fc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_5": {
+      "locked": {
         "lastModified": 1744536153,
         "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
         "owner": "NixOS",
@@ -261,7 +277,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_5": {
+    "nixpkgs_6": {
       "locked": {
         "lastModified": 1770107345,
         "narHash": "sha256-tbS0Ebx2PiA1FRW8mt8oejR0qMXmziJmPaU1d4kYY9g=",
@@ -281,19 +297,17 @@
       "inputs": {
         "crane": "crane_2",
         "flake-parts": "flake-parts_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs_4",
         "rust-overlay": "rust-overlay_2",
         "systems": "systems_3",
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1784291312,
-        "narHash": "sha256-ZZ/ClHabm8vAkbCBsdZyplMWuGkPWDH6ssxmrGO3J14=",
+        "lastModified": 1790020336,
+        "narHash": "sha256-bNv9E6+5XG9eD2Ht4IUgE+rPveWSNwgnHRFghaVaIhY=",
         "ref": "refs/heads/main",
-        "rev": "da796c99c5163aed8dc410c990c2b5773da469e7",
-        "revCount": 83,
+        "rev": "c090e95123f3d3550d034fde30fae3aa489befb5",
+        "revCount": 99,
         "type": "git",
         "url": "ssh://git@github.com/alanpq/panoptes/"
       },
@@ -357,7 +371,7 @@
     },
     "rust-overlay_2": {
       "inputs": {
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": "nixpkgs_5"
       },
       "locked": {
         "lastModified": 1781580018,
@@ -458,7 +472,7 @@
     },
     "treefmt-nix_2": {
       "inputs": {
-        "nixpkgs": "nixpkgs_5"
+        "nixpkgs": "nixpkgs_6"
       },
       "locked": {
         "lastModified": 1780220602,

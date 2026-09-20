@@ -17,6 +17,7 @@
     ../../modules/vaultwarden.nix
     ../../modules/fail2ban.nix
     ../../modules/grafana.nix
+    ../../modules/panoptes.nix
   ];
   nix = {
     package = lib.mkDefault pkgs.nix;
@@ -99,18 +100,6 @@
     port = 8080;
   };
 
-  virtualisation.oci-containers = {
-    containers = {
-      panoptes = {
-        image = "panoptes:latest";
-        imageFile =
-          inputs.panoptes.packages.${system}.website-image;
-
-        ports = ["3010:80"];
-      };
-    };
-  };
-
   # services.heardle = {
   #   enable = false;
   #   listenHost = "127.0.1.2";
@@ -156,9 +145,6 @@
       }
 
       reverse_proxy http://${config.services.alanp-web.listenHost}:${toString config.services.alanp-web.port}
-    '';
-    virtualHosts."panoptes.alanp.me".extraConfig = ''
-      reverse_proxy http://127.0.0.1:3010
     '';
     virtualHosts."heardle.alanp.me".extraConfig = ''
       reverse_proxy http://${config.services.heardle.listenHost}:${toString config.services.heardle.port}

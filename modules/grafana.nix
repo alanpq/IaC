@@ -1,4 +1,7 @@
 {config, ...}: {
+  imports = [
+    ./node_exporter.nix
+  ];
   services = {
     grafana = {
       enable = true;

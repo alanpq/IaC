@@ -1,4 +1,27 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: let
+  mkPlugin = {
+    pname,
+    version,
+    hash,
+  }:
+    pkgs.stdenvNoCC.mkDerivation (finalAttrs: {
+      inherit pname version;
+      src = pkgs.fetchurl {
+        url = "https://grafana.com/api/plugins/${finalAttrs.pname}/versions/${finalAttrs.version}/download";
+        inherit hash;
+      };
+      nativeBuildInputs = [pkgs.unzip];
+      sourceRoot = ".";
+      installPhase = ''
+        mkdir -p $out
+        cp -r . $out/
+      '';
+    });
+in {
   imports = [
     ./node_exporter.nix
   ];
@@ -22,11 +45,14 @@
         security = {
           admin_user = "admin";
           admin_password = "$__file{${config.sops.secrets.grafana-admin-password.path}}";
+          secret_key = "SW2YcwTIb9zpOOhoPsMm"; # TODO: rotate this & use sops
         };
 
         # Prevents Grafana from phoning home
         analytics.reporting_enabled = false;
       };
+      declarativePlugins = with pkgs.grafanaPlugins; [
+      ];
       provision = {
         datasources.settings.datasources = [
           {

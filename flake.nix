@@ -5,12 +5,12 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     disko = {
@@ -20,15 +20,15 @@
 
     alanp-web = {
       url = "github:alanpq/website";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     rena-stage = {
       url = "git+ssh://git@gitlab.com/alanpq/rena-stage?lfs=1&shallow=1";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     heardle = {
       url = "git+ssh://git@github.com/alanpq/heardle/";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     panoptes = {
       url = "git+ssh://git@github.com/alanpq/panoptes/";
@@ -55,6 +55,7 @@
       (final: prev:
         import ./pkgs {pkgs = final;}
         // {
+          # buildGo125Module = prev.buildGoModule;
           # opencv = prev.opencv.overrideAttrs (old: let
           #   contribSrc = prev.fetchFromGitHub {
           #     owner = "opencv";
